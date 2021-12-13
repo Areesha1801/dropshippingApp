@@ -13,6 +13,7 @@ class JazzCash extends StatefulWidget {
 
 class _JazzCashState extends State<JazzCash> {
   functionality obj = functionality();
+  String x;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
