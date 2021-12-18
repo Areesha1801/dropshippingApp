@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:image_picker/image_picker.dart';
 import '../brain.dart';
 import 'address.dart';
+import 'paymentoption.dart';
 import 'success.dart';
 
 class JazzCash extends StatefulWidget {
@@ -14,6 +16,48 @@ class JazzCash extends StatefulWidget {
 class _JazzCashState extends State<JazzCash> {
   functionality obj = functionality();
   String x;
+  File imageFile;
+  ImagePicker img = ImagePicker();
+  Future<void> _openGallery(BuildContext context) async{
+    var picture= (await  ImagePicker().pickImage(source:ImageSource.gallery));
+     setState(() {
+      print(picture);
+      imageFile =  File(picture.path);
+    });
+    Navigator.pop(context);
+  }
+
+
+  Future<void> _showChoiceDialogue(BuildContext context){
+   return showDialog(context: context, builder: (BuildContext context){
+    return AlertDialog(
+      title: Text('Click button to open Gallery'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: [
+            GestureDetector(
+              child: Text('Gallery'),
+              onTap: (){
+                _openGallery(context);
+
+              },
+            ),
+            Padding(padding: EdgeInsets.all(8.0)),
+          ],
+        ),
+      ),
+      );
+   });
+  }
+
+  Widget _decideImageView(){
+    if(imageFile == null){
+      return Text('No Images Selected');
+    }else{
+      return Image.file(imageFile,width: 200, height: 200,);
+  }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +76,7 @@ class _JazzCashState extends State<JazzCash> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddressScreen()));
+                      builder: (context) => const paymentOption()));
             },
           ),
         ),
@@ -92,6 +136,7 @@ class _JazzCashState extends State<JazzCash> {
                         ),
                       ),
                     ),
+                    _decideImageView(),
 
                     Padding(
                       padding: const EdgeInsets.only(
@@ -111,7 +156,9 @@ class _JazzCashState extends State<JazzCash> {
                             ),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          _showChoiceDialogue(context);
+                        },
                       ),
                     ),
                     Padding(

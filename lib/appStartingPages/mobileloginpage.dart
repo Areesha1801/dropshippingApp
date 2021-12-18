@@ -124,7 +124,7 @@ Future registerUser(String mobile, BuildContext context) async{
 
   _auth.verifyPhoneNumber(
       phoneNumber: num,
-      timeout: Duration(seconds: 60),
+      timeout: Duration(seconds: 120),
       verificationCompleted: (authCredential){
         _auth.signInWithCredential(authCredential).then((UserCredential result){
           Navigator.pushReplacement(context, MaterialPageRoute(
