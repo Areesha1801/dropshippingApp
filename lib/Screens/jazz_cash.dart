@@ -1,11 +1,17 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../firebaseapi.dart';
 import '../brain.dart';
 import 'address.dart';
 import 'paymentoption.dart';
 import 'success.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 
+final FirebaseDatabase database = FirebaseDatabase.instance;
 class JazzCash extends StatefulWidget {
   const JazzCash({Key key}) : super(key: key);
 
@@ -14,19 +20,22 @@ class JazzCash extends StatefulWidget {
 }
 
 class _JazzCashState extends State<JazzCash> {
+
+  String item;
+  String quanity;
+  String price;
   functionality obj = functionality();
   String x;
   File imageFile;
   ImagePicker img = ImagePicker();
   Future<void> _openGallery(BuildContext context) async{
-    var picture= (await  ImagePicker().pickImage(source:ImageSource.gallery));
+    var picture= (await  ImagePicker().getImage(source:ImageSource.gallery));
      setState(() {
       print(picture);
       imageFile =  File(picture.path);
     });
     Navigator.pop(context);
   }
-
 
   Future<void> _showChoiceDialogue(BuildContext context){
    return showDialog(context: context, builder: (BuildContext context){
@@ -50,6 +59,18 @@ class _JazzCashState extends State<JazzCash> {
    });
   }
 
+  Future uploadFile() async{
+    if (imageFile == null)
+      {
+        return;
+      }else{
+      final fileName = basename(imageFile.path);
+      final destination = 'Order1/$fileName';
+      FirebaseApi.uploadFile(destination, imageFile);
+
+    }
+  }
+
   Widget _decideImageView(){
     if(imageFile == null){
       return Text('No Images Selected');
@@ -57,7 +78,14 @@ class _JazzCashState extends State<JazzCash> {
       return Image.file(imageFile,width: 200, height: 200,);
   }
   }
-
+  @override
+  void initState() {
+    super.initState();
+    Firebase.initializeApp().whenComplete(() {
+      print("completed");
+      setState(() {});
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,7 +177,7 @@ class _JazzCashState extends State<JazzCash> {
                         child: const Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Text(
-                            "Upload Receipt",
+                            "Upload Receipt Image",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -180,6 +208,17 @@ class _JazzCashState extends State<JazzCash> {
                           ),
                         ),
                         onPressed: () {
+                          item = obj.showItems()[0];
+                          quanity = obj.showItems()[1].toString();
+                          price = obj.showItems()[2].toString();
+
+                          print(item);
+                          database.reference().child("User1").child("Order1").child("Item").set("$item");
+                          database.reference().child("User1").child("Order1").child("Quantity").set("$quanity");
+                          database.reference().child("User1").child("Order1").child("Price").set("$price");
+                          uploadFile();
+                          print("image uploaded");
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -197,3 +236,4 @@ class _JazzCashState extends State<JazzCash> {
     );
   }
 }
+

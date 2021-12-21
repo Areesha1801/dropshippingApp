@@ -2,6 +2,7 @@ import 'package:dropshippingapp/Screens/address.dart';
 import 'package:dropshippingapp/Screens/homescreen.dart';
 import 'package:dropshippingapp/bottom_icons_pages/profile.dart';
 import 'package:dropshippingapp/components/reusable_card.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../brain.dart';
@@ -17,6 +18,7 @@ class ShoppingCartScreen extends StatefulWidget {
 }
 
 class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
+
   functionality obj = functionality();
   double totalBill = 0.0;
   var cartData = List();
