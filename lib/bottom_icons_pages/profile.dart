@@ -128,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             size: 30.0,
                           ),
                           title: Text(
-                            '+920$number',
+                            '+92 $number',
                             style: TextStyle(
                                 fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),

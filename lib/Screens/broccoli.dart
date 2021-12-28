@@ -17,7 +17,7 @@ class BroccoliScreen extends StatefulWidget {
 class _BroccoliScreenState extends State<BroccoliScreen> {
   functionality obj = functionality();
   var cartData = List();
-  double broccoliPrice;
+  double broccoliPrice = 0;
   double quantity = 50;
   @override
   Widget build(BuildContext context) {

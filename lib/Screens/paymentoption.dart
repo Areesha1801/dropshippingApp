@@ -1,5 +1,7 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:intl/intl.dart';
 import '../brain.dart';
 import 'address.dart';
 import 'jazz_cash.dart';
@@ -15,6 +17,34 @@ class paymentOption extends StatefulWidget {
 class _paymentOptionState extends State<paymentOption> {
   functionality obj = functionality();
   String payMethod = "";
+  String item;
+  String quanity;
+  String price;
+
+  void saveToDatabase() async{
+    var dbTimeKey = new DateTime.now();
+    var formatDate = DateFormat('MM d, yyyy');
+    var formateTime = DateFormat('EEE, hh:mm aaa');
+
+    String date=formatDate.format(dbTimeKey);
+    String time=formateTime.format(dbTimeKey);
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+    String potato = "${obj.showItems()[0]} : ${obj.showItems()[1]} g, ${obj.showItems()[2]} Rs";
+    String brocolli = "${obj.showItems()[3]} : ${obj.showItems()[4]} g, ${obj.showItems()[5]} Rs";
+
+
+    var cartData={
+      "Item": "$potato , $brocolli",
+      "time": time,
+      "Location": obj.showLocation(),
+      "PaymentMethod": "COD",
+      "Name": "Areesha",//obj.userName(),
+      "Number": "03081726082",//obj.userNumber(),
+      "TotalPrice": obj.bill(),
+    };
+    ref.child("Order1").push().set(cartData);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +111,7 @@ class _paymentOptionState extends State<paymentOption> {
                         onPressed: () {
                           payMethod = "COD";
                           obj.paymentMethod(payMethod);
+                          saveToDatabase();
                           Navigator.push(
                               context,
                               MaterialPageRoute(

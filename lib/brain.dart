@@ -41,4 +41,7 @@ class functionality {
   void paymentMethod(String m){
     paymenttMethod = m;
   }
+  String showLocation(){
+    return addresss;
+  }
 }

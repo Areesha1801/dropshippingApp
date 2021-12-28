@@ -10,8 +10,9 @@ import 'paymentoption.dart';
 import 'success.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart';
+import 'package:intl/intl.dart';
 
-final FirebaseDatabase database = FirebaseDatabase.instance;
+//final FirebaseDatabase database = FirebaseDatabase.instance;
 class JazzCash extends StatefulWidget {
   const JazzCash({Key key}) : super(key: key);
 
@@ -28,6 +29,7 @@ class _JazzCashState extends State<JazzCash> {
   String x;
   File imageFile;
   ImagePicker img = ImagePicker();
+  String url;
   Future<void> _openGallery(BuildContext context) async{
     var picture= (await  ImagePicker().getImage(source:ImageSource.gallery));
      setState(() {
@@ -59,7 +61,44 @@ class _JazzCashState extends State<JazzCash> {
    });
   }
 
-  Future uploadFile() async{
+  void uploadFile() async{
+    final Reference postImageReference = FirebaseStorage.instance.ref().child('Order Images');
+    var timeKey = new DateTime.now();
+    final UploadTask uploadTask = postImageReference.child(timeKey.toString()+ ".jpg").putFile(imageFile);
+
+    var ImageUrl = await(await uploadTask).ref.getDownloadURL();
+    url = ImageUrl.toString();
+    print("Image Url = " + url);
+
+    saveToDatabase(url);
+  }
+  void saveToDatabase(url){
+    var dbTimeKey = new DateTime.now();
+    var formatDate = DateFormat('MM d, yyyy');
+    var formateTime = DateFormat('EEE, hh:mm aaa');
+    
+    String date=formatDate.format(dbTimeKey);
+    String time=formateTime.format(dbTimeKey);
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+    String potato = "${obj.showItems()[0]} : ${obj.showItems()[1]} g, ${obj.showItems()[2]} Rs";
+    String brocolli = "${obj.showItems()[3]} : ${obj.showItems()[4]} g, ${obj.showItems()[5]} Rs";
+
+
+        var cartData={
+          "Item": "$potato , $brocolli",
+          "image": url,
+          "time": time,
+          "Location": obj.showLocation(),
+          "PaymentMethod": "Jazzcash",
+          "Name": "Areesha",//obj.userName(),
+          "Number": "654321",//obj.userNumber(),
+          "TotalPrice": obj.bill(),
+        };
+        ref.child("Order1").push().set(cartData);
+
+  }
+  /*Future uploadFile() async{
     if (imageFile == null)
       {
         return;
@@ -69,7 +108,7 @@ class _JazzCashState extends State<JazzCash> {
       FirebaseApi.uploadFile(destination, imageFile);
 
     }
-  }
+  }*/
 
   Widget _decideImageView(){
     if(imageFile == null){
@@ -78,14 +117,14 @@ class _JazzCashState extends State<JazzCash> {
       return Image.file(imageFile,width: 200, height: 200,);
   }
   }
-  @override
+  /*@override
   void initState() {
     super.initState();
     Firebase.initializeApp().whenComplete(() {
       print("completed");
       setState(() {});
     });
-  }
+  }*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,16 +247,14 @@ class _JazzCashState extends State<JazzCash> {
                           ),
                         ),
                         onPressed: () {
-                          item = obj.showItems()[0];
-                          quanity = obj.showItems()[1].toString();
-                          price = obj.showItems()[2].toString();
-
+                          uploadFile();
                           print(item);
-                          database.reference().child("User1").child("Order1").child("Item").set("$item");
+                          /*database.reference().child("User1").child("Order1").child("Item").set("$item");
                           database.reference().child("User1").child("Order1").child("Quantity").set("$quanity");
                           database.reference().child("User1").child("Order1").child("Price").set("$price");
-                          uploadFile();
-                          print("image uploaded");
+                          uploadFile();*/
+
+
 
                           Navigator.push(
                               context,

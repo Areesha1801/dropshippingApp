@@ -19,7 +19,7 @@ class _PotatoScreenState extends State<PotatoScreen> {
   functionality obj = functionality();
   var cartData = List();
   double quantity = 15;
-  double potatoPrice;
+  double potatoPrice = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

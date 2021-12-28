@@ -1,10 +1,16 @@
 import 'dart:async';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:dropshippingapp/Screens/homescreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'getstarted.dart';
+import 'mobileloginpage.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  print("completed");
   return runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
