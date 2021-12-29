@@ -1,4 +1,11 @@
 # dropshippingapp
+
+# gifs
+---------------------------------------------------------------------------------
+![1](https://user-images.githubusercontent.com/91142792/147615766-68c5c5f7-9533-4d5e-8134-af658ef3bc03.gif)
+![2](https://user-images.githubusercontent.com/91142792/147615767-e97ed31b-2dcf-4a37-8a71-af79294e9e15.gif)
+![3](https://user-images.githubusercontent.com/91142792/147615770-6e5c7a8c-9f76-41a4-aaab-0595a46b3b41.gif)
+
 ---------------------------------------------------------------------------------
 # Client Side
 
